@@ -6,7 +6,7 @@ RM		= @rm -rf
 MKDIR		= @mkdir
 MKDEP		= @mkdep
 ECHO		= @echo
-INCDIRS		= -I/usr/X11R6/include 
+INCDIRS		= -I/usr/X11R6/include
 #use the following LIBS line for GNU/Linux
 LIBS	 	= -lm -lX11 -lXmu -lXi -lXext -lGL -lGLU -lglut
 #use this one instead for Mac OSX
@@ -40,4 +40,3 @@ deps:
 	$(CC) $(CFLAGS) -MD -E $(SOURCES) > /dev/null
 	$(MKDIR) .deps
 	$(MV) $(DEPS) .deps
-
