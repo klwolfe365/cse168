@@ -17,9 +17,12 @@ public:
     void setKa(const Vector3 & ka) {m_ka = ka;}
 
     virtual void preCalc() {}
-    
+
     virtual Vector3 shade(const Ray& ray, const HitInfo& hit,
                           const Scene& scene) const;
+    virtual Vector3 reflect(const Vector3 & normal, const Vector3 & incident) const;
+    virtual Vector3 refract(const Vector3 & normal, const Vector3 & incident,
+                  double n1, double n2) const;
 protected:
     Vector3 m_kd;
     Vector3 m_ka;

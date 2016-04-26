@@ -10,6 +10,8 @@
 #include "TriangleMesh.h"
 #include "Triangle.h"
 #include "Lambert.h"
+
+#include "Specular.h"
 #include "MiroWindow.h"
 #include "assignment1.h"
 
@@ -38,6 +40,7 @@ makeSpiralScene()
 
     // create a spiral of spheres
     Material* mat = new Lambert(Vector3(1.0f, 0.0f, 0.0f));
+    // Material* mat = new Specular(Vector3(1.0f, 0.0f, 0.0f), Vector3(0.5f), 0.5f);
     const int maxI = 200;
     const float a = 0.15f;
     for (int i = 1; i < maxI; ++i)
@@ -123,9 +126,11 @@ int
 main(int argc, char*argv[])
 {
     // create a scene
-    //makeSpiralScene();
+    // makeSpiralScene();
     // makeBunnyScene();
     makeTeapotScene();
+    // makeSphereScene();
+    // makeTwoSphereScene();
     MiroWindow miro(&argc, argv);
     miro.mainLoop();
 

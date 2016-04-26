@@ -45,7 +45,7 @@ Scene::raytraceImage(Camera *cam, Image *img)
     Ray ray;
     HitInfo hitInfo;
     Vector3 shadeResult;
-    
+
     // loop over all pixels in the image
     for (int j = 0; j < img->height(); ++j)
     {
@@ -63,7 +63,7 @@ Scene::raytraceImage(Camera *cam, Image *img)
         printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
         fflush(stdout);
     }
-    
+
     printf("Rendering Progress: 100.000%\n");
     debug("done Raytracing!\n");
 }
