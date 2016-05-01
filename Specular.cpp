@@ -4,11 +4,11 @@
 #include "Scene.h"
 #include <algorithm>
 
-Specular::Specular(const Vector3 & kd, const Vector3 & ks, const Vector3 & km,
-                   const float p, const float rl, const float rf) :
-    m_kd(kd), m_ks(ks), m_km(km), m_p(p), m_rl(rl), m_rf(rf)
+Specular::Specular(const Vector3 & kd, const Vector3 & ks,
+                   const float p, const float rl, const float n, const float rf) :
+    m_kd(kd), m_ks(ks), m_p(p), m_rl(rl), m_rf(rf)
 {
-
+    m_n = n;
 }
 
 Specular::~Specular()
@@ -24,17 +24,24 @@ Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
     const Vector3 viewDir = -ray.d; // d is a unit vector
 
     const Lights *lightlist = scene.lights();
+    Vector3 color = Vector3(m_kd);
+    if (hit.material->hasTexture()) {
+        Vector3 c = Vector3(hit.P);
+		color = m_texture->getColor(c);
+    }
 
     // loop over all of the lights
+
+    HitInfo lightHitReflect = HitInfo(hit);
+    HitInfo lightHitRefract = HitInfo(hit);
+    lightHitReflect.hitNum = hit.hitNum;
+    lightHitRefract.hitNum = hit.hitNum;
+
     Lights::const_iterator lightIter;
     for (lightIter = lightlist->begin(); lightIter != lightlist->end(); lightIter++)
     {
         PointLight* pLight = *lightIter;
         Ray lightRay;
-        HitInfo lightHitReflect;
-        HitInfo lightHitRefract;
-        lightHitReflect.hitNum = hit.hitNum + 1;
-        lightHitRefract.hitNum = hit.hitNum + 1;
 
         Vector3 l = pLight->position() - hit.P;
         float falloff = l.length2();
@@ -43,7 +50,7 @@ Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
         /* Calculate the diffuse component - From Labertian Shading Model */
         float nDotL = dot(hit.N, l);
         Vector3 diffuseResult = pLight->color();
-        diffuseResult *= m_kd;
+        diffuseResult *= color;
         L += std::max(0.0f, nDotL/falloff * pLight->wattage() / PI) * diffuseResult;
 
         /* Calculate the specular highlight - From Phong Shading Model */
@@ -54,22 +61,35 @@ Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
         L += pow(std::max(0.0f, nDotH/falloff * pLight->wattage() / PI), m_p) * specResult;
 
         /* Calculate the specular reflectance */
-        Vector3 r = reflect(hit.N, ray.d);
-        lightRay.d = r;
-        lightRay.o = hit.P;
-        if(lightHitReflect.hitNum < MAX_BOUNCE){
-            if(scene.trace(lightHitReflect, lightRay, 0.0001, r.length()))
-                L+=lightHitReflect.material->shade(lightRay, lightHitReflect, scene)*m_rl;
+        if(lightHitReflect.hitNum < 1){
+            Vector3 r = reflect(hit.N, ray.d);
+            lightRay.d = r.normalize();
+            lightRay.o = hit.P;
+            if(scene.trace(lightHitReflect, lightRay, 0.0001, r.length())){
+                lightHitReflect.hitNum = lightHitReflect.hitNum+1;
+                L += lightHitReflect.material->shade(lightRay, lightHitReflect, scene)*m_rl;
+            } //else L+=scene.getBGColor();
         }
-        
-        /* Calculate the specular refractance */
-        Vector3 t = refract(hit.N, viewDir, hit.material->n(), m_rf);
-        lightRay.d = t.normalize();
-        lightRay.o = hit.P;
-        // if(lightHitRefract.hitNum < MAX_BOUNCE)
-        //     L += scene.trace(lightHitRefract, lightRay, 0.0001, t.length()) * m_rf;
 
-        // Vector3 rt = Vector3(1.0, 1.0, 1.0) - r - t;
+        /* Calculate the specular refractance */
+        // Vector3 incident = viewDir - hit.P;
+
+        if(lightHitRefract.hitNum < 1 && m_rf > 0.0f ){
+            Vector3 t = refract(hit.N, ray.d, hit.material->n(), m_n);
+            if(t != Vector3(0.0f))
+            lightRay.d = t.normalize();
+            else lightRay.d = t;
+            lightRay.o = hit.P;
+            if(scene.trace(lightHitRefract, lightRay, 0.0001, t.length())){
+                lightHitRefract.hitNum = lightHitRefract.hitNum+1;
+                // if(lightHitRefract.material != NULL){
+                    // if(lightHitRefract.material != NULL)
+                    L+=lightHitRefract.material->shade(lightRay, lightHitRefract, scene)*m_rf;
+                // }
+            } else {
+                L+=scene.getBGColor()*m_rf;
+            }
+        } //else printf("hitNum: %d\n", lightHitRefract.hitNum);
     }
 
     // add the ambient component
@@ -85,12 +105,17 @@ Vector3 Specular::reflect(const Vector3 & normal, const Vector3 & incident) cons
 
 Vector3 Specular::refract(const Vector3 & normal, const Vector3 & incident,
                 double n1, double n2) const{
-    const double n = n1/n2;
-    const double cosI = dot(normal, incident);
-    const double sinT2 = n * n * (1.0 - (cosI * cosI));
+    double n;
+    double cosI = dot(normal, incident);
+    if(cosI < 0.0f)
+        n = n1/n2;
+    else
+        n = n2/n1;
+    double sinT2 = n * n * (1.0 - (cosI * cosI));
 
-    if(sinT2 > 1.0)
-        return Vector3();
+    if(sinT2 > 1.0){
+        return Vector3(0.0f);
+    }
 
     return (n * incident) - ((n + sqrt(1.0 - sinT2)) * normal);
 }

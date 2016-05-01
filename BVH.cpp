@@ -18,17 +18,21 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
 
     bool hit = false;
     HitInfo tempMinHit;
+    // tempMinHit.hitNum = minHit.hitNum;
     minHit.t = MIRO_TMAX;
-    
+
     for (size_t i = 0; i < m_objects->size(); ++i)
     {
         if ((*m_objects)[i]->intersect(tempMinHit, ray, tMin, tMax))
         {
             hit = true;
-            if (tempMinHit.t < minHit.t)
+            if (tempMinHit.t < minHit.t){
+                // tempMinHit.hitNum = minHit.hitNum;
                 minHit = tempMinHit;
+                minHit.material = tempMinHit.material;
+            }
         }
     }
-    
+
     return hit;
 }

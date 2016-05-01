@@ -1,6 +1,8 @@
 #include "Triangle.h"
 #include "TriangleMesh.h"
 #include "Ray.h"
+#include "Lambert.h"
+#include "Specular.h"
 
 
 Triangle::Triangle(TriangleMesh * m, unsigned int i) :
@@ -85,6 +87,8 @@ Triangle::intersect(HitInfo& result, const Ray& r,float tMin, float tMax)
     const Vector3 & n1 = m_mesh->normals()[nti3.y];
     const Vector3 & n2 = m_mesh->normals()[nti3.z];
     result.N = (((1 - beta - gamma) * n0) + (beta * n1) + (gamma * n2)).normalize();
+
+
 
     result.material = this->m_material;
     return true;

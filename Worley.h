@@ -4,13 +4,13 @@
     provided this comment header remains intact in the source code.
     This code is provided with no warrantee, express or implied, for
     any purpose.
-    
+
     A detailed description and application examples can be found in the
     1996 SIGGRAPH paper "A Cellular Texture Basis Function" and
     especially in the 2002 book "Texturing and Modeling, a Procedural
     Approach, 3rd edition." There is also extra information on the web
     site http://www.worley.com/cellular.html .
-    
+
     If you do find interesting uses for this tool, and especially if
     you enhance it, please drop me an email at steve@worley.com.
 */
@@ -29,8 +29,8 @@
     difficult to extend to compute alternative information such as
     higher order F values, to use the Manhattan distance metric, or
     other fun perversions.
-    
-    <at>    The input sample location. 
+
+    <at>    The input sample location.
     <maxOrder>  Smaller values compute faster. < 5, read the book to extend it.
     <F>     The output values of F_1, F_2, ..F[n] in F[0], F[1], F[n-1]
     <delta> The output vector difference between the sample point and the n-th
@@ -40,7 +40,7 @@
     <ID>    The output 32 bit ID number which labels the feature point. This
                 is useful for domain partitions, especially for coloring flagstone
                 patterns.
-    
+
     This implementation is tuned for speed in a way that any order > 5
     will likely have discontinuous artifacts in its computation of F5+.
     This can be fixed by increasing the internal points-per-cube
@@ -51,16 +51,16 @@ class WorleyNoise
 {
 public:
     // 1D
-    static void noise1D(float at, long maxOrder,
-                float *F, float (*delta), unsigned long *ID);
-    
+    static void noise1D(float at, int maxOrder,
+                float *F, float (*delta), unsigned int *ID);
+
     // 2D
-    static void noise2D(float at[2], long maxOrder,
-                float *F, float (*delta)[2], unsigned long *ID);
-    
+    static void noise2D(float at[2], int maxOrder,
+                float *F, float (*delta)[2], unsigned int *ID);
+
     // 3D
-    static void noise3D(float at[3], long maxOrder,
-                float *F, float (*delta)[3], unsigned long *ID); 
+    static void noise3D(float at[3], int maxOrder,
+                float *F, float (*delta)[3], unsigned int *ID); 
 };
 
 #endif // CSE168_WORLEY_H_INCLUDED

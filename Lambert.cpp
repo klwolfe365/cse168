@@ -21,7 +21,11 @@ Lambert::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
     const Vector3 viewDir = -ray.d; // d is a unit vector
 
     const Lights *lightlist = scene.lights();
-
+    Vector3 color = Vector3(m_kd);
+    if (hit.material->hasTexture()) {
+        Vector3 c = Vector3(hit.P);
+		color = m_texture->getColor(c);
+    }
     // loop over all of the lights
     Lights::const_iterator lightIter;
     for (lightIter = lightlist->begin(); lightIter != lightlist->end(); lightIter++)
@@ -39,7 +43,7 @@ Lambert::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
         // get the diffuse component
         float nDotL = dot(hit.N, l);
         Vector3 result = pLight->color();
-        result *= m_kd;
+        result *= color;
 
         L += std::max(0.0f, nDotL/falloff * pLight->wattage() / PI) * result;
     }

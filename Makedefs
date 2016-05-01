@@ -20,7 +20,7 @@ CFLAGS          = $(INCDIRS) -O3 -fomit-frame-pointer \
 
 .cpp.o:
 	$(ECHO) "Compiling $<"
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -g -o $@ $<
 .d.o:
 	$(ECHO) "Finding dependancies for $<"
 	$(CC) $(CFLAGS) -MD -E $<

@@ -3,6 +3,7 @@
 Material::Material()
 {
     m_n = 1.0f;
+    m_texture = NULL;
 }
 
 Material::~Material()

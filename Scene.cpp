@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Image.h"
 #include "Console.h"
+#include "Specular.h"
 
 Scene * g_scene = 0;
 
@@ -71,5 +72,17 @@ Scene::raytraceImage(Camera *cam, Image *img)
 bool
 Scene::trace(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
 {
-    return m_bvh.intersect(minHit, ray, tMin, tMax);
+    const Specular * spec = dynamic_cast<const Specular *>(minHit.material);
+    // if(spec != NULL && minHit.hitNum < 100)
+    // printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
+    // minHit.hitNum++;
+    return m_bvh.intersect(minHit, ray, tMin, tMax);;
 }
+
+// bool
+// Scene::trace2(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
+// {
+//     minHit.hitNum++;
+//     printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
+//     return m_bvh.intersect(minHit, ray, tMin, tMax);
+// }

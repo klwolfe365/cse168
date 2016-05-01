@@ -1,3 +1,6 @@
 .DS_STORE
 *.o
 miro
+wolfe_karen/*
+*.ppm
+*.zip

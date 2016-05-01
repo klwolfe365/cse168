@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "PointLight.h"
 #include "BVH.h"
+#include "Vector3.h"
 
 class Camera;
 class Image;
@@ -25,10 +26,14 @@ public:
     bool trace(HitInfo& minHit, const Ray& ray,
                float tMin = 0.0f, float tMax = MIRO_TMAX) const;
 
+    void setBGColor(const Vector3 & c) { backgroundColor = c;}
+    const Vector3 & getBGColor() const { return backgroundColor; }
+
 protected:
     Objects m_objects;
     BVH m_bvh;
     Lights m_lights;
+    Vector3 backgroundColor;
 };
 
 extern Scene * g_scene;
