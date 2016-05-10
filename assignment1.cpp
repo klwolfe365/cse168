@@ -108,7 +108,7 @@ makeSphereScene()
     Material* matte2 = new Lambert(Vector3(0.5f, 1.0f, 0.9f));
     Material* shiny = new Specular(Vector3(0.5f, 1.0f, 0.9f), Vector3(1.0f), 100.0f, 0.1f, 2.5f, 4.0f);
     TriangleMesh * sphere = new TriangleMesh;
-    sphere->load("sphere.obj");
+    sphere->load("objs/sphere.obj");
 
     // create all the triangles in the bunny mesh and add to the scene
     for (int i = 0; i < sphere->numTris(); ++i)
@@ -168,7 +168,7 @@ makeTeapotScene()
     // light->setColor(Vector3(1.0, 1.0, 1.0));
     // light->setWattage(5);
     // g_scene->addLight(light);
-    Material*  matte = new Specular(Vector3(0.9f, 0.10f, 0.10f),Vector3(1.0f), 10.0f, 0.3f, 2.1, 0.5f);
+    Material*  matte = new Lambert(Vector3(0.8f, 0.7f, 0.9f));//new Specular(Vector3(0.9f, 0.10f, 0.10f),Vector3(1.0f), 10.0f, 0.3f, 2.1, 0.5f);
     // Specular* matte = new Specular(Vector3(0.7f), Vector3(1.0f), 10.0f, 1.0f, 2.417, 1.0f);
 
     StoneTexture* stone = new StoneTexture(2.0, 2);
@@ -179,7 +179,7 @@ makeTeapotScene()
     // shiny->setTexture(stone);
 
     TriangleMesh * teapot = new TriangleMesh;
-    teapot->load("teapot.obj");
+    teapot->load("objs/teapot.obj");
 
     // create all the triangles in the bunny mesh and add to the scene
     for (int i = 0; i < teapot->numTris(); ++i)
