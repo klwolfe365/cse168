@@ -20,6 +20,10 @@ public:
     virtual bool intersect(HitInfo& result, const Ray& ray,
                            float tMin = 0.0f, float tMax = MIRO_TMAX) = 0;
 
+    virtual Vector3 getCenter() { return Vector3(0.0, 0.0, 0.0); }
+    virtual Vector3 getMin()    { return Vector3(0.0, 0.0, 0.0); }
+    virtual Vector3 getMax()    { return Vector3(0.0, 0.0, 0.0); }
+
 protected:
     const Material* m_material;
 };

@@ -8,6 +8,7 @@
 class BVH
 {
 public:
+    static const int NUM_LEAF_NODES = 8;
     void build(Objects * objs);
 
     bool intersect(HitInfo& result, const Ray& ray,
