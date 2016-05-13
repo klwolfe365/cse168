@@ -40,7 +40,7 @@ bool BoundingBox::intersect(HitInfo& minHit, const Ray& ray,
     minVal = fmax(minX, fmax(minY, minZ));
     maxVal = fmin(maxX, fmin(maxY, maxZ));
     minHit.t = minVal;
-    return minVal < maxVal; // maxVal >= fmax(minVal, 0);
+    return maxVal >= fmax(minVal, 0); //for rays that begin in the box
 }
 
 void BoundingBox::print() {
