@@ -13,7 +13,7 @@
 
 #include "Specular.h"
 #include "MiroWindow.h"
-#include "assignment1.h"
+#include "assignment2.h"
 
 void
 makeSpiralScene()
@@ -121,16 +121,72 @@ makeBunnyScene()
     g_scene->preCalc();
 }
 */
+void makeTwoTriangles(){
+    g_camera = new Camera;
+    g_scene = new Scene;
+    g_image = new Image;
 
+    g_image->resize(512, 512);
+
+    // set up the camera
+    g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
+    g_camera->setEye(Vector3(0, 3, 6));
+    g_camera->setLookAt(Vector3(0, 0, 0));
+    g_camera->setUp(Vector3(0, 1, 0));
+    g_camera->setFOV(45);
+
+    // create and place a point light source
+    PointLight * light = new PointLight;
+    light->setPosition(Vector3(10, 10, 10));
+    light->setColor(Vector3(1, 1, 1));
+    light->setWattage(700);
+    g_scene->addLight(light);
+
+    Material* material = new Lambert(Vector3(1.0f));
+
+    TriangleMesh * floor = new TriangleMesh;
+    floor->createSingleTriangle();
+    floor->setV1(Vector3(-2, 0, 0));
+    floor->setV2(Vector3( 0, 0,  0));
+    floor->setV3(Vector3( -1, 3, 0));
+    floor->setN1(Vector3(0, 1, 0));
+    floor->setN2(Vector3(0, 1, 0));
+    floor->setN3(Vector3(0, 1, 0));
+
+    Triangle* t = new Triangle;
+    t->setIndex(0);
+    t->setMesh(floor);
+    t->setMaterial(material);
+    g_scene->addObject(t);
+
+    TriangleMesh * floor2 = new TriangleMesh;
+    floor2->createSingleTriangle();
+    floor2->setV1(Vector3(1, 3, -3));
+    floor2->setV2(Vector3( 0, 0,  -3));
+    floor2->setV3(Vector3( 2, 0, -3));
+    floor2->setN1(Vector3(0, 1, -3));
+    floor2->setN2(Vector3(0, 1, -3));
+    floor2->setN3(Vector3(0, 1, -3));
+
+    Triangle* t2 = new Triangle;
+    t2->setIndex(0);
+    t2->setMesh(floor2);
+    t2->setMaterial(material);
+    g_scene->addObject(t2);
+
+    // let objects do pre-calculations if needed
+    g_scene->preCalc();
+}
 int
 main(int argc, char*argv[])
 {
     // create a scene
     // makeSpiralScene();
     // makeBunnyScene();
-    makeTeapotScene();
+    // makeTwoTriangles();
     // makeSphereScene();
     // makeTwoSphereScene();
+    makeTeapotScene();
     MiroWindow miro(&argc, argv);
     miro.mainLoop();
 

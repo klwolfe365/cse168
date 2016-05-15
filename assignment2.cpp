@@ -28,7 +28,7 @@ makeTeapotScene()
     g_image = new Image;
 
     g_image->resize(512, 512);
-    
+
     // set up the camera
     g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
     g_camera->setEye(Vector3(0, 3, 6));
@@ -45,9 +45,9 @@ makeTeapotScene()
 
     Material* material = new Lambert(Vector3(1.0f));
     TriangleMesh * teapot = new TriangleMesh;
-    teapot->load("teapot.obj");
+    teapot->load("objs/teapot.obj");
     addMeshTrianglesToScene(teapot, material);
-    
+
     // create the floor triangle
     TriangleMesh * floor = new TriangleMesh;
     floor->createSingleTriangle();
@@ -57,13 +57,13 @@ makeTeapotScene()
     floor->setN1(Vector3(0, 1, 0));
     floor->setN2(Vector3(0, 1, 0));
     floor->setN3(Vector3(0, 1, 0));
-    
+
     Triangle* t = new Triangle;
     t->setIndex(0);
     t->setMesh(floor);
-    t->setMaterial(material); 
+    t->setMaterial(material);
     g_scene->addObject(t);
-    
+
     // let objects do pre-calculations if needed
     g_scene->preCalc();
 }
@@ -77,7 +77,7 @@ makeBunny1Scene()
     g_image = new Image;
 
     g_image->resize(512, 512);
-    
+
     // set up the camera
     g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
     g_camera->setEye(Vector3(0, 5, 15));
@@ -96,7 +96,7 @@ makeBunny1Scene()
     TriangleMesh * bunny = new TriangleMesh;
     bunny->load("bunny.obj");
     addMeshTrianglesToScene(bunny, material);
-    
+
     // create the floor triangle
     TriangleMesh * floor = new TriangleMesh;
     floor->createSingleTriangle();
@@ -106,13 +106,13 @@ makeBunny1Scene()
     floor->setN1(Vector3(0, 1, 0));
     floor->setN2(Vector3(0, 1, 0));
     floor->setN3(Vector3(0, 1, 0));
-    
+
     Triangle* t = new Triangle;
     t->setIndex(0);
     t->setMesh(floor);
-    t->setMaterial(material); 
+    t->setMaterial(material);
     g_scene->addObject(t);
-    
+
     // let objects do pre-calculations if needed
     g_scene->preCalc();
 }
@@ -127,7 +127,7 @@ makeBunny20Scene()
     g_image = new Image;
 
     g_image->resize(128, 128);
-    
+
     // set up the camera
     g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
     g_camera->setEye(Vector3(0, 5, 15));
@@ -324,13 +324,13 @@ makeBunny20Scene()
     mesh->setN1(Vector3(0, 1, 0));
     mesh->setN2(Vector3(0, 1, 0));
     mesh->setN3(Vector3(0, 1, 0));
-    
+
     Triangle* t = new Triangle;
     t->setIndex(0);
     t->setMesh(mesh);
-    t->setMaterial(material); 
+    t->setMaterial(material);
     g_scene->addObject(t);
-    
+
     // let objects do pre-calculations if needed
     g_scene->preCalc();
 }
@@ -344,7 +344,7 @@ makeSponzaScene()
     g_image = new Image;
 
     g_image->resize(512, 512);
-    
+
     // set up the camera
     g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
     g_camera->setEye(Vector3(8, 1.5, 1));
@@ -363,7 +363,7 @@ makeSponzaScene()
     TriangleMesh * mesh = new TriangleMesh;
     mesh->load("sponza.obj");
     addMeshTrianglesToScene(mesh, material);
-    
+
     // let objects do pre-calculations if needed
     g_scene->preCalc();
 }
@@ -382,7 +382,7 @@ addMeshTrianglesToScene(TriangleMesh * mesh, Material * material)
         Triangle* t = new Triangle;
         t->setIndex(i);
         t->setMesh(mesh);
-        t->setMaterial(material); 
+        t->setMaterial(material);
         g_scene->addObject(t);
     }
 }
@@ -412,7 +412,7 @@ inline Matrix4x4
 rotate(float angle, float x, float y, float z)
 {
     float rad = angle*(PI/180.);
-    
+
     float x2 = x*x;
     float y2 = y*y;
     float z2 = z*z;
@@ -428,7 +428,7 @@ rotate(float angle, float x, float y, float z)
     float xzcinv = xz*cinv;
     float xycinv = xy*cinv;
     float yzcinv = yz*cinv;
-    
+
     Matrix4x4 m;
     m.set(x2 + c*(1-x2), xy*cinv+zs, xzcinv - ys, 0,
           xycinv - zs, y2 + c*(1-y2), yzcinv + xs, 0,
@@ -438,5 +438,3 @@ rotate(float angle, float x, float y, float z)
 }
 
 } // namespace
-
-

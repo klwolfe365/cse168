@@ -17,6 +17,11 @@ Triangle::~Triangle()
 
 }
 
+void Triangle::preCalc(){
+    calculateCenter();
+    // calculateMin();
+    // calculateMax();
+}
 
 void
 Triangle::renderGL()
@@ -92,4 +97,36 @@ Triangle::intersect(HitInfo& result, const Ray& r,float tMin, float tMax)
 
     result.material = this->m_material;
     return true;
+}
+
+void Triangle::calculateCenter(){
+    TriangleMesh::TupleI3 vti3 = m_mesh->vIndices()[m_index];
+    const Vector3 & v0 = m_mesh->vertices()[vti3.x]; //vertex a of triangle
+    const Vector3 & v1 = m_mesh->vertices()[vti3.y]; //vertex b of triangle
+    const Vector3 & v2 = m_mesh->vertices()[vti3.z]; //vertex c of triangle
+    m_center = (v0+v1+v2)/3;
+}
+
+Vector3 Triangle::getMin(){
+    TriangleMesh::TupleI3 vti3 = m_mesh->vIndices()[m_index];
+    const Vector3 & v0 = m_mesh->vertices()[vti3.x]; //vertex a of triangle
+    const Vector3 & v1 = m_mesh->vertices()[vti3.y]; //vertex b of triangle
+    const Vector3 & v2 = m_mesh->vertices()[vti3.z]; //vertex c of triangle
+    Vector3 m_min;
+	m_min.x = fmin(v0.x, fmin(v1.x, v2.x));
+	m_min.y = fmin(v0.y, fmin(v1.y, v2.y));
+	m_min.z = fmin(v0.z, fmin(v1.z, v2.z));
+    return m_min;
+}
+
+Vector3 Triangle::getMax(){
+    TriangleMesh::TupleI3 vti3 = m_mesh->vIndices()[m_index];
+    const Vector3 & v0 = m_mesh->vertices()[vti3.x]; //vertex a of triangle
+    const Vector3 & v1 = m_mesh->vertices()[vti3.y]; //vertex b of triangle
+    const Vector3 & v2 = m_mesh->vertices()[vti3.z]; //vertex c of triangle
+    Vector3 m_max;
+	m_max.x = fmax(v0.x, fmax(v1.x, v2.x));
+	m_max.y = fmax(v0.y, fmax(v1.y, v2.y));
+	m_max.z = fmax(v0.z, fmax(v1.z, v2.z));
+    return m_max;
 }
