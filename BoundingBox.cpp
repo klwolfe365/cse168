@@ -12,7 +12,12 @@ BoundingBox::~BoundingBox(){}
 bool BoundingBox::intersect(HitInfo& minHit, const Ray& ray,
         float tMin, float tMax) const {
     //Calculate min and max slabs of bounding box
-    float minX, maxX, minY, maxY, minZ, maxZ = 0.0f;
+    float minX = 0.0f;
+    float maxX = 0.0f;
+    float minY = 0.0f;
+    float maxY = 0.0f;
+    float minZ = 0.0f;
+    float maxZ = 0.0f;
     float minVal, maxVal;
 
     //Calculate min and max values for x/y/z planes
@@ -39,8 +44,9 @@ bool BoundingBox::intersect(HitInfo& minHit, const Ray& ray,
 
     minVal = fmax(minX, fmax(minY, minZ));
     maxVal = fmin(maxX, fmin(maxY, maxZ));
-    minHit.t = minVal;
-    return maxVal >= fmax(minVal, 0); //for rays that begin in the box
+    // minHit.t = minVal;
+
+    return maxVal >= minVal;//fmax(minVal, 0); //for rays that begin in the box
 }
 
 void BoundingBox::print() {

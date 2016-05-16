@@ -57,7 +57,7 @@ BVH::build(Objects * objs)
         if(tempMin.z < boxMin.z)
             boxMin.z = tempMin.z;
 
-        if(tempMax.x > boxMin.x)
+        if(tempMax.x > boxMax.x)
             boxMax.x = tempMax.x;
         if(tempMax.y > boxMax.y)
             boxMax.y = tempMax.y;
@@ -227,24 +227,79 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
 {
     // Here you would need to traverse the BVH to perform ray-intersection
     // acceleration. For now we just intersect every object.
-
+    // printf("bvh intersect\n");
     bool hit = false;
-    HitInfo tempMinHit;
-    // tempMinHit.hitNum = minHit.hitNum;
-    minHit.t = MIRO_TMAX;
+    if(isLeaf){
+        // printf("Intersect leaf\n");
+        HitInfo tempMinHit;
+        minHit.t = MIRO_TMAX;
 
-    for (size_t i = 0; i < m_objects->size(); ++i)
-    {
-        if ((*m_objects)[i]->intersect(tempMinHit, ray, tMin, tMax))
+        for (size_t i = 0; i < m_objects->size(); ++i)
         {
-            hit = true;
-            if (tempMinHit.t < minHit.t){
-                // tempMinHit.hitNum = minHit.hitNum;
-                minHit = tempMinHit;
-                minHit.material = tempMinHit.material;
+            if ((*m_objects)[i]->intersect(tempMinHit, ray, tMin, tMax))
+            {
+                hit = true;
+                if (tempMinHit.t < minHit.t){
+                    // tempMinHit.hitNum = minHit.hitNum;
+                    minHit = tempMinHit;
+                    minHit.material = tempMinHit.material;
+                }
             }
         }
-    }
+    } else {
+        HitInfo lMinHit;
+        HitInfo rMinHit;
+        HitInfo lMin;
+        HitInfo rMin;
+        bool lHit = left_child->getBoundingBox().intersect(lMin, ray, tMin, tMax);
+        bool rHit = right_child->getBoundingBox().intersect(rMin, ray, tMin, tMax);
+        if(lHit && rHit){
+            // printf("Left and right child bbox hit...\n");
+            lHit = left_child->intersect(lMinHit, ray, tMin, tMax);
+            rHit = right_child->intersect(rMinHit, ray, tMin, tMax);
+            if(lHit){
+                hit = true;
+                minHit = lMinHit;
+                minHit.material = lMinHit.material;
+            }
 
+            if(rHit){
+                if(lHit){
+                    //Hit both boxes, check for which one is closer
+                    if(rMinHit.t < lMinHit.t){
+                        hit = true;
+                        minHit = rMinHit;
+                        minHit.material = rMinHit.material;
+                    }
+                }
+                //Only hit right box
+                else {
+                    hit = true;
+                    minHit = rMinHit;
+                    minHit.material = rMinHit.material;
+                }
+                // hit = true;
+            }
+        }
+        else if (lHit){
+            // printf("Hit left bbox child only\n");
+            if(left_child->intersect(lMinHit, ray, tMin, tMax)){
+                hit = true;
+                minHit = lMinHit;
+                minHit.material = lMinHit.material;
+            }
+        }
+        else if(rHit){
+            // printf("Hit right bbox child only\n");
+            if(right_child->intersect(rMinHit, ray, tMin, tMax)){
+                hit = true;
+                minHit = rMinHit;
+                minHit.material = rMinHit.material;
+            }
+        } else {
+            hit = false;
+        }
+    }
+    // printf("Returning\n");
     return hit;
 }

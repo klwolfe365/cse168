@@ -94,7 +94,7 @@ makeBunny1Scene()
 
     Material* material = new Lambert(Vector3(1.0f));
     TriangleMesh * bunny = new TriangleMesh;
-    bunny->load("bunny.obj");
+    bunny->load("objs/bunny.obj");
     addMeshTrianglesToScene(bunny, material);
 
     // create the floor triangle

@@ -55,13 +55,15 @@ Scene::raytraceImage(Camera *cam, Image *img)
             ray = cam->eyeRay(i, j, img->width(), img->height());
             if (trace(hitInfo, ray))
             {
-                shadeResult = hitInfo.material->shade(ray, hitInfo, *this);
+                // printf("Traced...\n");
+                const Material * mat = hitInfo.material;
+                shadeResult = mat->shade(ray, hitInfo, *this);
                 img->setPixel(i, j, shadeResult);
             }
         }
         img->drawScanline(j);
         glFinish();
-        printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
+        // printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
         fflush(stdout);
     }
 
@@ -72,7 +74,7 @@ Scene::raytraceImage(Camera *cam, Image *img)
 bool
 Scene::trace(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
 {
-    const Specular * spec = dynamic_cast<const Specular *>(minHit.material);
+    // const Specular * spec = dynamic_cast<const Specular *>(minHit.material);
     // if(spec != NULL && minHit.hitNum < 100)
     // printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
     // minHit.hitNum++;

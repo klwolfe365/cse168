@@ -18,7 +18,7 @@ Specular::~Specular()
 Vector3
 Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
 {
-
+    printf("Shading specular\n");
     Vector3 L = Vector3(0.0f, 0.0f, 0.0f);
 
     const Vector3 viewDir = -ray.d; // d is a unit vector
