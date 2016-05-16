@@ -18,13 +18,14 @@ public:
 
     virtual void preCalc() {}
 
+    Vector3 BRDF(const Vector3& in, const Vector3& normal, const Vector3& out, const bool& isFront = true) const;
     virtual Vector3 shade(const Ray& ray, const HitInfo& hit,
                           const Scene& scene) const;
     virtual Vector3 reflect(const Vector3 & normal, const Vector3 & incident) const;
     virtual Vector3 refract(const Vector3 & normal, const Vector3 & incident,
                   double n1, double n2) const;
     virtual Vector3 reflectance() const { return m_kd; }
-    virtual Vector3 randomReflect(Vector3 in, Vector3 hitNorm) const;
+    virtual Vector3 randomReflect(Vector3 in, Vector3 hitNorm);
 protected:
     Vector3 m_kd;
     Vector3 m_ka;

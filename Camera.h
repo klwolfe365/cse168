@@ -43,6 +43,8 @@ public:
 
     Ray eyeRay(int x, int y, int imageWidth, int imageHeight);
     Ray randRay(int x, int y, int imageWidth, int imageHeight);
+    Ray shiftEyeRay(float x, float y, int imageWidth, int imageHeight);
+
 
     void drawGL();
 

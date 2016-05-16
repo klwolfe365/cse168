@@ -55,8 +55,8 @@ Camera::click(Scene* pScene, Image* pImage)
         if (firstRayTrace)
         {
             pImage->clear(bgColor());
-            // pScene->pathtraceImage(this, g_image);
-            pScene->raytraceImage(this, g_image);
+            pScene->pathtraceImage(this, g_image);
+            // pScene->raytraceImage(this, g_image);
             firstRayTrace = false;
         }
 

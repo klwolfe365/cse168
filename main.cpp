@@ -186,8 +186,8 @@ main(int argc, char*argv[])
     // makeTwoTriangles();
     // makeSphereScene();
     // makeTwoSphereScene();
-    makeTeapotScene();
-    // makeSponzaScene();
+    // makeTeapotScene();
+    makeSponzaScene();
     MiroWindow miro(&argc, argv);
     miro.mainLoop();
 

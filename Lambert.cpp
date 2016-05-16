@@ -13,6 +13,11 @@ Lambert::~Lambert()
 {
 }
 
+Vector3 Lambert::BRDF(const Vector3& in, const Vector3& normal, const Vector3& out, const bool& isFront) const {
+    if (dot(normal, out) < 0) return 0;
+    else return m_kd / M_PI;
+}
+
 Vector3
 Lambert::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
 {
@@ -64,7 +69,7 @@ Vector3 Lambert::refract(const Vector3 & normal, const Vector3 & incident,
     return Vector3(0.0f);
 }
 
-Vector3 Lambert::randomReflect(Vector3 in, Vector3 hitNorm) const {
+Vector3 Lambert::randomReflect(Vector3 in, Vector3 hitNorm) {
     float u;
     do {
         u = ((float)rand() / RAND_MAX);
@@ -75,15 +80,16 @@ Vector3 Lambert::randomReflect(Vector3 in, Vector3 hitNorm) const {
     Vector3 dir = Vector3(cos(v)*sqrt(u), sin(v)*sqrt(u), sqrt(1 - u));
     Vector3 n = hitNorm.normalized();
     //Generate orthonormal basis
-    Vector3 a = dot(Vector3(1,0,0), n);
-    Vector3 b = dot(Vector3(0,1,0), n);
+    float a = dot(Vector3(1,0,0), n);
+    float b = dot(Vector3(0,1,0), n);
     Vector3 y;
     if(fabs(a) < fabs(b)){
-        y = Vector3(1,0,0)-(dot(Vector(1,0,0), n)*n);
+        y = Vector3(1,0,0)-(dot(Vector3(1,0,0), n)*n);
     } else {
-        y = Vector3(0,1,0)-(dot(Vector(0,1,0), n)*n);
+        y = Vector3(0,1,0)-(dot(Vector3(0,1,0), n)*n);
     }
     Vector3 x = cross(y, n).normalize();
     Vector3 result = dir.x*x + dir.y*y + dir.z*n;
+    m_emittance = sqrt(1-u)/M_PI;
     return result;
 }

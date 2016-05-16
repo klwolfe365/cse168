@@ -16,6 +16,7 @@ public:
     virtual Vector3 shade(const Ray& ray, const HitInfo& hit,
                           const Scene& scene) const;
 
+    virtual Vector3 BRDF(const Vector3& in, const Vector3& normal, const Vector3& out, const bool& isFront = true) const { return 0; }
     virtual Vector3 reflect(const Vector3 & normal, const Vector3 & incident) const;
     virtual Vector3 refract(const Vector3 & normal, const Vector3 & incident,
         double n1, double n2) const;
@@ -28,6 +29,8 @@ public:
     float emittance() const { return m_emittance; }
     void setEmittance(const float& e) { m_emittance = e; }
     virtual Vector3 reflectance() const { return Vector3(0,0,0); }
+    virtual Vector3 randomReflect(const Vector3& ray, const Vector3& hit, const bool& isFront = true);
+
 
 protected:
     float m_n; //index of refraction - default air
