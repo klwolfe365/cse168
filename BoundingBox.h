@@ -11,9 +11,14 @@ public:
 	BoundingBox();
 	BoundingBox(Vector3 min, Vector3 max);
 	~BoundingBox();
-	bool intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const;
+	bool intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax);
 	void print();
 	void draw();
+	int hitNum;
+	int triHit;
+
+    void incHitNum() { hitNum++; }
+	void incTriHit(int t) {triHit += t;}
 
 protected:
 

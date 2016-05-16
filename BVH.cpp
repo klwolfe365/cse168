@@ -232,20 +232,26 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
     if(isLeaf){
         // printf("Intersect leaf\n");
         HitInfo tempMinHit;
+        tempMinHit.triHit = minHit.triHit;
+        tempMinHit.boxHit = minHit.boxHit;
         minHit.t = MIRO_TMAX;
-
+        int hitCount = 0;
         for (size_t i = 0; i < m_objects->size(); ++i)
         {
             if ((*m_objects)[i]->intersect(tempMinHit, ray, tMin, tMax))
             {
                 hit = true;
+                hitCount++;
                 if (tempMinHit.t < minHit.t){
                     // tempMinHit.hitNum = minHit.hitNum;
                     minHit = tempMinHit;
                     minHit.material = tempMinHit.material;
+
                 }
             }
         }
+        // printf("Triangle hit %d vs %d\n", minHit.triHit, hitCount);
+        minHit.triHit = hitCount;
     } else {
         HitInfo lMinHit;
         HitInfo rMinHit;
@@ -254,6 +260,8 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
         bool lHit = left_child->getBoundingBox().intersect(lMin, ray, tMin, tMax);
         bool rHit = right_child->getBoundingBox().intersect(rMin, ray, tMin, tMax);
         if(lHit && rHit){
+            left_child->getBoundingBox().incHitNum();
+            right_child->getBoundingBox().incHitNum();
             // printf("Left and right child bbox hit...\n");
             lHit = left_child->intersect(lMinHit, ray, tMin, tMax);
             rHit = right_child->intersect(rMinHit, ray, tMin, tMax);
@@ -280,26 +288,55 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
                 }
                 // hit = true;
             }
+            minHit.boxHit = lMinHit.boxHit + rMinHit.boxHit + 1;
         }
         else if (lHit){
+            left_child->getBoundingBox().incHitNum();//.hitNum++;
             // printf("Hit left bbox child only\n");
             if(left_child->intersect(lMinHit, ray, tMin, tMax)){
                 hit = true;
                 minHit = lMinHit;
                 minHit.material = lMinHit.material;
             }
+            minHit.boxHit = lMinHit.boxHit + 1;
         }
         else if(rHit){
+            right_child->getBoundingBox().incHitNum();//.hitNum++;
             // printf("Hit right bbox child only\n");
             if(right_child->intersect(rMinHit, ray, tMin, tMax)){
                 hit = true;
                 minHit = rMinHit;
                 minHit.material = rMinHit.material;
             }
+            minHit.boxHit = rMinHit.boxHit + 1;
         } else {
             hit = false;
         }
     }
     // printf("Returning\n");
     return hit;
+}
+
+int BVH::getLeafNum(){
+    if(isLeaf)
+    return 1;
+    return left_child->getLeafNum() + right_child->getLeafNum();
+}
+
+int BVH::getNodeNum(){
+    if(isLeaf)
+    return 1;
+    return left_child->getNodeNum() + right_child->getNodeNum() + 1;
+}
+
+int BVH::getBoundingBoxHits(){
+    if(isLeaf)
+        return bbox.hitNum;
+    return left_child->getBoundingBoxHits() + right_child->getBoundingBoxHits() + bbox.hitNum;
+}
+
+int BVH::getTriangleHits(){
+    if(isLeaf)
+        return bbox.triHit;
+    return left_child->getTriangleHits() + right_child->getTriangleHits();
 }

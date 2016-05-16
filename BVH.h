@@ -17,6 +17,11 @@ public:
 
     void draw();
 
+    int getLeafNum();
+    int getNodeNum();
+    int getBoundingBoxHits();
+    int getTriangleHits();
+
 protected:
     Objects * m_objects;
     BVH* left_child;

@@ -65,7 +65,7 @@ MiroWindow::mainLoop()
     glutMouseFunc(::mouse);
     glutMotionFunc(::motion);
     glutReshapeFunc(::resize);
-    
+
     // Start the glut main loop, never returns
     glutMainLoop();
 }
@@ -118,15 +118,15 @@ MiroWindow::mouse(int button, int state, int x, int y)
         case GLUT_LEFT_BUTTON:
             b = LEFT;
         break;
-        
+
         case GLUT_MIDDLE_BUTTON:
             b = MIDDLE;
         break;
-        
+
         case GLUT_RIGHT_BUTTON:
             b = RIGHT;
         break;
-        
+
         default:
             b = 0;
     }
@@ -239,4 +239,3 @@ MiroWindow::reshape(int w, int h)
     g_camera->setRenderer(Camera::RENDER_OPENGL);
     glutPostRedisplay();
 }
-

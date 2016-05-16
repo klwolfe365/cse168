@@ -5,12 +5,13 @@ BoundingBox::BoundingBox(){}
 BoundingBox::BoundingBox(Vector3 min, Vector3 max){
     this->min = min;
     this->max = max;
+    hitNum = 0;
 }
 
 BoundingBox::~BoundingBox(){}
 
 bool BoundingBox::intersect(HitInfo& minHit, const Ray& ray,
-        float tMin, float tMax) const {
+        float tMin, float tMax) {
     //Calculate min and max slabs of bounding box
     float minX = 0.0f;
     float maxX = 0.0f;

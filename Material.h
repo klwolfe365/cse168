@@ -25,11 +25,15 @@ public:
     virtual void setTexture(Texture * t)  { m_texture = t;}
 
     virtual const bool hasTexture() const   { return m_texture != NULL;}
+    float emittance() const { return m_emittance; }
+    void setEmittance(const float& e) { m_emittance = e; }
+    virtual Vector3 reflectance() const { return Vector3(0,0,0); }
 
 protected:
     float m_n; //index of refraction - default air
     static const int MAX_BOUNCE = 5;
     Texture * m_texture;
+    float m_emittance;
 };
 
 #endif // CSE168_MATERIAL_H_INCLUDED

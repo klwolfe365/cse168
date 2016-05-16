@@ -34,6 +34,8 @@ public:
     Vector3 N;                          //!< Shading normal vector
     const Material* material;           //!< Material of the intersected object
     int hitNum;
+    int boxHit;
+    int triHit;
     //! Default constructor.
     explicit HitInfo(float t = 0.0f,
                      const Vector3& P = Vector3(),
