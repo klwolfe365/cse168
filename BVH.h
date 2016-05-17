@@ -13,6 +13,8 @@ public:
 
     bool intersect(HitInfo& result, const Ray& ray,
                    float tMin = 0.0f, float tMax = MIRO_TMAX) const;
+   bool oldIntersect(HitInfo& result, const Ray& ray,
+                  float tMin = 0.0f, float tMax = MIRO_TMAX) const;
     BoundingBox getBoundingBox() { return bbox; }
 
     void draw();

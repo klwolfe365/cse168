@@ -368,6 +368,67 @@ makeSponzaScene()
     g_scene->preCalc();
 }
 
+void
+makeCornellBoxScene()
+{
+    g_camera = new Camera;
+    g_scene = new Scene;
+    g_image = new Image;
+
+    g_image->resize(512, 512);
+
+    // set up the camera
+    g_camera->setBGColor(Vector3(0.0f, 0.0f, 0.2f));
+	g_camera->setEye(Vector3(2.75, 2.75, 8));
+	g_camera->setLookAt(Vector3(2.75, 2.75, -2.75));
+	g_camera->setUp(Vector3(0, 1, 0));
+	g_camera->setFOV(45);
+
+	// create and place a point light source
+	PointLight * light = new PointLight;
+	light->setPosition(Vector3(2.75, 5.4, -2.75));
+	light->setColor(Vector3(1, 1, 1));
+	light->setWattage(100);
+	g_scene->addLight(light);
+
+
+	PointLight * light1 = new PointLight;
+	light1->setPosition(Vector3(2.75, 2, 1));
+	light1->setColor(Vector3(1, 1, 1));
+	light1->setWattage(10);
+	// g_scene->addLight(light1);
+    
+    Material* material = new Lambert(Vector3(1.0f));
+    TriangleMesh * mesh = new TriangleMesh;
+    mesh->load("cornell_box.obj");
+    // addMeshTrianglesToScene(mesh, material);
+    Material* white = new Lambert(Vector3(0.8f));
+	Material* red = new Lambert(Vector3(1.0f, 0.0f, 0.0f));
+	Material* green = new Lambert(Vector3(0.0f, 1.0f, 0.0f));
+
+	// create all the triangles in the mesh and add to the scene
+	for (int i = 0; i < mesh->numTris(); ++i)
+	{
+		Material* m = white;
+		if (i < 4 || i >= 8)
+			m = white;
+		else if (i >= 4 && i < 6)
+			m = red;
+		else if (i >= 6 && i < 8)
+			m = green;
+
+
+		Triangle* t = new Triangle;
+		t->setIndex(i);
+		t->setMesh(mesh);
+		t->setMaterial(m);
+		g_scene->addObject(t);
+	}
+
+    // let objects do pre-calculations if needed
+    g_scene->preCalc();
+}
+
 
 // local helper function definitions
 namespace

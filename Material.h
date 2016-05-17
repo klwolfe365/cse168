@@ -26,11 +26,14 @@ public:
     virtual void setTexture(Texture * t)  { m_texture = t;}
 
     virtual const bool hasTexture() const   { return m_texture != NULL;}
+
+    //Used for monte-carlo algorithms
     float emittance() const { return m_emittance; }
     void setEmittance(const float& e) { m_emittance = e; }
     virtual Vector3 reflectance() const { return Vector3(0,0,0); }
     virtual Vector3 randomReflect(const Vector3& ray, const Vector3& hit, const bool& isFront = true);
-
+    virtual float getEmittance(const Ray& ray, const HitInfo& hit,
+                          const Scene& scene) const { return 0.2; }
 
 protected:
     float m_n; //index of refraction - default air

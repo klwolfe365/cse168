@@ -26,6 +26,8 @@ public:
                   double n1, double n2) const;
     virtual Vector3 reflectance() const { return m_kd; }
     virtual Vector3 randomReflect(Vector3 in, Vector3 hitNorm);
+    virtual float getEmittance(const Ray& ray, const HitInfo& hit,
+                          const Scene& scene) const;
 protected:
     Vector3 m_kd;
     Vector3 m_ka;

@@ -32,8 +32,6 @@ public:
     Vector3 traceRecurse(const Ray& ray,
               int bounce) const;
     Vector3 getRandDirection(HitInfo& hit) const;
-    Vector3 sampleLight(HitInfo& hit, PointLight* light) const;
-    Vector3 getRandomPoint(PointLight* Pointlight) const;
 
     void setBGColor(const Vector3 & c) { backgroundColor = c;}
     const Vector3 & getBGColor() const { return backgroundColor; }

@@ -228,6 +228,7 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
     // Here you would need to traverse the BVH to perform ray-intersection
     // acceleration. For now we just intersect every object.
     // printf("bvh intersect\n");
+    // return oldIntersect(minHit, ray, tMin, tMax);
     bool hit = false;
     if(isLeaf){
         // printf("Intersect leaf\n");
@@ -339,4 +340,30 @@ int BVH::getTriangleHits(){
     if(isLeaf)
         return bbox.triHit;
     return left_child->getTriangleHits() + right_child->getTriangleHits();
+}
+
+bool BVH::oldIntersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const {
+    bool hit = false;
+    HitInfo tempMinHit;
+    tempMinHit.triHit = minHit.triHit;
+    tempMinHit.boxHit = minHit.boxHit;
+    minHit.t = MIRO_TMAX;
+    int hitCount = 0;
+    for (size_t i = 0; i < m_objects->size(); ++i)
+    {
+        if ((*m_objects)[i]->intersect(tempMinHit, ray, tMin, tMax))
+        {
+            hit = true;
+            hitCount++;
+            if (tempMinHit.t < minHit.t){
+                // tempMinHit.hitNum = minHit.hitNum;
+                minHit = tempMinHit;
+                minHit.material = tempMinHit.material;
+
+            }
+        }
+    }
+    // printf("Triangle hit %d vs %d\n", minHit.triHit, hitCount);
+    minHit.triHit = hitCount;
+    return hit;
 }

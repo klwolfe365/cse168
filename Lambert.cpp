@@ -18,6 +18,37 @@ Vector3 Lambert::BRDF(const Vector3& in, const Vector3& normal, const Vector3& o
     else return m_kd / M_PI;
 }
 
+float Lambert::getEmittance(const Ray& ray, const HitInfo& hit,
+                      const Scene& scene) const {
+    const Lights *lightlist = scene.lights();
+    Vector3 color = Vector3(m_kd);
+    Vector3 L = Vector3(0.0f, 0.0f, 0.0f);
+    float em = 0.0;
+    Lights::const_iterator lightIter;
+
+    for (lightIter = lightlist->begin(); lightIter != lightlist->end(); lightIter++)
+    {
+        float weight = (float)rand() / (float)RAND_MAX;
+        PointLight* pLight = *lightIter;
+
+        Vector3 l = pLight->position() - hit.P;
+
+        // the inverse-squared falloff
+        float falloff = l.length2();
+
+        // normalize the light direction
+        l /= sqrt(falloff);
+
+        // get the diffuse component
+        float nDotL = dot(hit.N, l);
+        // Vector3 result = pLight->color();
+        // result *= color;
+        em += std::max(0.0f, nDotL/falloff * pLight->wattage() * weight / PI);
+        // L += std::max(0.0f, nDotL/falloff * pLight->wattage() * weight / PI) * result;
+    }
+    return em;
+}
+
 Vector3
 Lambert::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
 {

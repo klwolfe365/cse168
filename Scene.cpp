@@ -113,12 +113,9 @@ Scene::pathtraceImage(Camera *cam, Image *img)
             Vector3 colorSum = Vector3(0.0, 0.0, 0.0);
 
             for(int s = 0; s < samples; s++) {
-                // if(s == 0)
-                //     ray = cam->eyeRay(i, j, img->width(), img->height());
-                // else
-                    ray = cam->shiftEyeRay(i, j, img->width(), img->height());
+                ray = cam->shiftEyeRay(i, j, img->width(), img->height());
                 if (trace(hitInfo, ray))
-                    colorSum += traceRecurse(ray, 0) / (double)samples;
+                    colorSum += traceRecurse(ray, 0) / (float)samples;
             }
             img->setPixel(i, j, colorSum);
         }
@@ -152,87 +149,14 @@ Scene::traceRecurse(const Ray & ray, int bounce) const {
             Ray newRay;
             newRay.o = hit.P;
             newRay.d = getRandDirection(hit);
+            float em = hit.material->getEmittance(ray, hit, *this);
             return c + (0.5 * traceRecurse(newRay, bounce + 1));
         }
     } else {
         return Vector3(0.0);
     }
 }
-//
-// Vector3
-// Scene::traceRecurse(const Ray& ray, int bounce) const
-// {
-//     if(bounce > MAX_BOUNCE){
-//         return Vector3(0.0);
-//     }
-//     HitInfo hit;
-//     if(!trace(hit, ray)){
-//         return Vector3(0.0);
-//     }
-//
-//     float randnum = (float)(rand() / RAND_MAX); //get a random number 0-1.0f
-//     // float em = hit.object->material()->emittance();
-//
-//     Vector3 randDir = hit.material->randomReflect(-ray.d, hit.N);
-//
-//     // Vector3 gathered;
-//     // Lights::const_iterator lightIter;
-//     // for (lightIter = m_lights.begin(); lightIter != m_lights.end(); lightIter++)
-//     // {
-//     //
-//     //     PointLight* pLight = *lightIter;
-//     //     gathered += sampleLight(hit, pLight);
-//     //     // ray.d = pLight->position() - hitInfo.P;
-//     //     // ray.d.normalize();
-//     //     // ray.o = ray.o + ray.d * epsilon;
-//     //     // if (trace(hitInfo, ray)) {
-//     //     //     if (hitInfo.t > EPSILON) {
-//     //     //         shadeResult = Vector3(0);
-//     //     //         break;
-//     //     //     }
-//     //     // }
-//     // }
-//
-//
-//
-//
-//
-//
-//     // float randNum = (float)(rand()/RAND_MAX); // Get random number 0->1.0
-//     // float emit = hit.material->emittance();
-//     //
-//     // Vector3 reflect = hit.material->shade(ray, hit, *this);
-//     // printf("Reflectance %f %f %f\n", reflect.x, reflect.y, reflect.z);
-//     // if(emit == 1.0 || randNum < emit){
-//     //     Vector3 radiance =
-//     // }
-//     Ray newRay;// = getBounceRay();
-//     newRay.o = hit.P;
-//     newRay.d = randDir.normalized();
-//
-//     Vector3 brdf = hit.material->BRDF(-ray.d, hit.N, newRay.d);
-//
-//     float cos_theta = dot(hit.N, newRay.d);
-//     // Vector3 bdrf =  * cos_theta;
-//     Vector3 color = traceRecurse(newRay, bounce+1);
-//     Vector3 gather = hit.material->shade(ray, hit, *this);
-//     float em = 1.0f/(4.0*M_PI);
-//     // float em = hit.material->
-//     // const Specular * spec = dynamic_cast<const Specular *>(minHit.material);
-//     // if(spec != NULL && minHit.hitNum < 100)
-//     // printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
-//     // minHit.hitNum++;
-//     // Vector3 bdrf = 2 * PI * reflect;
-//     return gather + (brdf*cos*traceRecurse(newRay, bounce + 1)*(1.0 / (1.0 - em)) / ;
-// }
 
-// bool
-// Scene::trace2(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
-// {
-//     minHit.hitNum++;
-//     printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
-//     return m_bvh.intersect(minHit, ray, tMin, tMax);
-// }
 Vector3
 Scene::getRandDirection(HitInfo& hitInfo) const {
     double phi = 2.0 * PI * (double)rand() / (double)RAND_MAX;
@@ -247,31 +171,4 @@ void Scene::printStats(){
     printf("Number of intersections: %d\n", bIntersect);
     printf("Number of triangle hits: %d\n", tIntersect);
     printf("==================================\n");
-}
-
-Vector3 Scene::sampleLight(HitInfo& hit, PointLight* light) const{
-    Vector3 lValue;
-    for(int s = 0; s < samples; s++){
-        Vector3 randPoint = getRandomPoint(light);
-        //Check if light is visible
-        Ray ray;
-        ray.d = randPoint - hit.P;
-        ray.d.normalize();
-        ray.o = ray.o + ray.d * epsilon;
-        HitInfo hitInfo;
-        if (trace(hitInfo, ray)) {
-            if (hitInfo.t > EPSILON) {
-                lValue += Vector3(0.0f);
-            }
-        } else {
-            lValue += hit.material->shade(ray, hit, *this)/samples;//get local illumination TODO
-        }
-    }
-    return lValue;
-}
-
-Vector3 Scene::getRandomPoint(PointLight* light) const{
-    Vector3 pos = light->position();
-    HitInfo hit;
-    return pos + getRandDirection(hit);
 }
