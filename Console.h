@@ -1,3 +1,10 @@
+//
+//  Console.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #ifndef CSE168_CONSOLE_H_INCLUDED
 
 void warning(const char *fmt,...);

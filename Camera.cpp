@@ -55,8 +55,8 @@ Camera::click(Scene* pScene, Image* pImage)
         if (firstRayTrace)
         {
             pImage->clear(bgColor());
-            pScene->pathtraceImage(this, g_image);
-            // pScene->raytraceImage(this, g_image);
+            // pScene->pathtraceImage(this, g_image);
+            pScene->raytraceImage(this, g_image);
             firstRayTrace = false;
         }
 
@@ -131,13 +131,13 @@ Camera::eyeRay(int x, int y, int imageWidth, int imageHeight)
     return Ray(m_eye, (imPlaneUPos*uDir + imPlaneVPos*vDir - wDir).normalize());
 }
 
+
+//@author Karen Wolfe
 Ray
 Camera::randRay(int x, int y, int imageWidth, int imageHeight)
 {
 	// first compute the camera coordinate system
 	// ------------------------------------------
-
-	// wDir = e - (e+m_viewDir) = -m_vView
 	const Vector3 wDir = Vector3(-m_viewDir).normalize();
 	const Vector3 uDir = cross(m_up, wDir).normalize();
 	const Vector3 vDir = cross(wDir, uDir);
@@ -171,6 +171,7 @@ Camera::randRay(int x, int y, int imageWidth, int imageHeight)
 	return Ray(m_eye, (imPlaneUPos*uDir + imPlaneVPos*vDir - wDir).normalize());
 }
 
+//@author Karen Wolfe
 Ray Camera::shiftEyeRay(float x, float y, int imageWidth, int imageHeight){
     float dx = 0.5 - (double)rand() / (double)RAND_MAX;
     float dy = 0.5 - (double)rand() / (double)RAND_MAX;

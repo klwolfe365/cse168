@@ -1,3 +1,10 @@
+//
+//  Specular.cpp
+//  cse168
+//
+//  Written by Karen Wolfe
+//
+//
 #include "Specular.h"
 #include "Lambert.h"
 #include "Ray.h"
@@ -68,7 +75,7 @@ Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
             if(scene.trace(lightHitReflect, lightRay, 0.0001, r.length())){
                 lightHitReflect.hitNum = lightHitReflect.hitNum+1;
                 L += lightHitReflect.material->shade(lightRay, lightHitReflect, scene)*m_rl;
-            } //else L+=scene.getBGColor();
+            }
         }
 
         /* Calculate the specular refractance */
@@ -82,18 +89,12 @@ Specular::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
             lightRay.o = hit.P;
             if(scene.trace(lightHitRefract, lightRay, 0.0001, t.length())){
                 lightHitRefract.hitNum = lightHitRefract.hitNum+1;
-                // if(lightHitRefract.material != NULL){
-                    // if(lightHitRefract.material != NULL)
                     L+=lightHitRefract.material->shade(lightRay, lightHitRefract, scene)*m_rf;
-                // }
             } else {
                 L+=scene.getBGColor()*m_rf;
             }
-        } //else printf("hitNum: %d\n", lightHitRefract.hitNum);
+        }
     }
-
-    // add the ambient component
-    // L += m_ka;
 
     return L;
 }

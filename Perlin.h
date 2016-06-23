@@ -1,3 +1,10 @@
+//
+//  Perlin.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #ifndef CSE168_PERLIN_H_INCLUDED
 #define CSE168_PERLIN_H_INCLUDED
 

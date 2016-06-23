@@ -1,3 +1,11 @@
+//
+//  Scene.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//  Added photonmapping, path tracing, and recursive tracing of rays
+//
 #include "Miro.h"
 #include "Scene.h"
 #include "Camera.h"
@@ -6,6 +14,18 @@
 #include "Specular.h"
 #include <math.h>
 #define EPSILON 0.000001
+
+struct hitpoint{
+    Vector3 position;
+    Vector3 normal;
+    Vector3 omega;      //ray direction
+    int BRDF_index;
+    float x, y;         // pixel location
+    Vector3 weight;
+    float radius;
+    int photon_count;
+    Vector3 tau;        // accumulated reflected flux
+};
 
 Scene * g_scene = 0;
 
@@ -63,6 +83,8 @@ Scene::raytraceImage(Camera *cam, Image *img)
             if (trace(hitInfo, ray))
             {
                 // printf("Traced...\n");
+                hitInfo.u = i;
+                hitInfo.v = j;
                 const Material * mat = hitInfo.material;
                 shadeResult = mat->shade(ray, hitInfo, *this);
                 if (useShadows) {
@@ -99,6 +121,7 @@ Scene::raytraceImage(Camera *cam, Image *img)
     printStats();
 }
 ////////////////////////////////////////////////////////////////////////////////
+//@author Karen Wolfe
 void
 Scene::pathtraceImage(Camera *cam, Image *img)
 {
@@ -113,7 +136,7 @@ Scene::pathtraceImage(Camera *cam, Image *img)
             Vector3 colorSum = Vector3(0.0, 0.0, 0.0);
 
             for(int s = 0; s < samples; s++) {
-                ray = cam->shiftEyeRay(i, j, img->width(), img->height());
+                ray = cam->eyeRay(i, j, img->width(), img->height());
                 if (trace(hitInfo, ray))
                     colorSum += traceRecurse(ray, 0) / (float)samples;
             }
@@ -121,7 +144,7 @@ Scene::pathtraceImage(Camera *cam, Image *img)
         }
         img->drawScanline(j);
         glFinish();
-        // printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
+        printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
         fflush(stdout);
     }
 
@@ -129,17 +152,60 @@ Scene::pathtraceImage(Camera *cam, Image *img)
     debug("done Raytracing!\n");
 }
 
+//@author Karen Wolfe
+void
+Scene::photonMapImage(Camera *cam, Image *img){
+    Ray ray;
+    HitInfo hitInfo;
+    Vector3 shadeResult;
+    bool useShadows = false;
+    // loop over all pixels in the image
+    std::vector<hitpoint *> hitpoints;
+
+    for (int j = 0; j < img->height(); ++j)
+    {
+        for (int i = 0; i < img->width(); ++i) {
+            hitpoint* hp = new hitpoint;
+            ray = cam->eyeRay(i, j, img->width(), img->height());
+            Vector3 colorSum = hitInfo.material->shade(ray, hitInfo, *this);
+            //Store info about hit location for path tracing
+            hp->x = i;
+            hp->y = j;
+            hp->position = hitInfo.P;
+            hp->normal = hitInfo.N;
+            hp->omega = ray.d;
+            hp->weight = colorSum;
+            hp->radius = 10.0;
+            hp->photon_count = 100;
+            hp->tau = 0.0;
+            hitpoints.push_back(hp);
+            img->setPixel(i, j, colorSum);
+        }
+        img->drawScanline(j);
+        glFinish();
+        printf("Rendering Progress: %.3f%%\r", j/float(img->height())*100.0f);
+        fflush(stdout);
+    }
+
+    //BEGIN PHOTON MAPPING - initialize photon mapj
+    //loop through the lights to construct an initial photon mafp
+    for(hitpoint* h : hitpoints){
+        float density = h->photon_count/(M_PI*h->radius*h->radius);
+
+    }
+    printf("Rendering Progress: 100.000%\n");
+    debug("done Raytracing!\n");
+
+}
+
+//@author Karen Wolfe
 bool
 Scene::trace(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
 {
-    // const Specular * spec = dynamic_cast<const Specular *>(minHit.material);
-    // if(spec != NULL && minHit.hitNum < 100)
-    // printf("Reg TRACE hitnum %d... \n", minHit.hitNum);
-    // minHit.hitNum++;
-    return m_bvh.intersect(minHit, ray, tMin, tMax);;
+    return m_bvh.intersect(minHit, ray, tMin, tMax);
 }
 
-
+//@author Karen Wolfe
 Vector3
 Scene::traceRecurse(const Ray & ray, int bounce) const {
     HitInfo hit;
@@ -152,11 +218,13 @@ Scene::traceRecurse(const Ray & ray, int bounce) const {
             float em = hit.material->getEmittance(ray, hit, *this);
             return c + (0.5 * traceRecurse(newRay, bounce + 1));
         }
+        return c;
     } else {
         return Vector3(0.0);
     }
 }
 
+//@author Karen Wolfe
 Vector3
 Scene::getRandDirection(HitInfo& hitInfo) const {
     double phi = 2.0 * PI * (double)rand() / (double)RAND_MAX;
@@ -164,6 +232,7 @@ Scene::getRandDirection(HitInfo& hitInfo) const {
     return Vector3(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
 }
 
+//@author Karen Wolfe
 void Scene::printStats(){
     printf("\n=========== Statistics ===========\n");
     printf("Number of nodes in bvh: %d\n", m_bvh.getNodeNum());

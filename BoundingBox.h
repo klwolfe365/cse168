@@ -1,3 +1,11 @@
+//
+//  BoundingBox.h
+//  cse168
+//
+//  Created by Karen Wolfe
+//
+//
+
 #ifndef CSE168_BOUNDINGBOX_H_INCLUDED
 #define CSE168_BOUNDINGBOX_H_INCLUDED
 

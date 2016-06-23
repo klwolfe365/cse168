@@ -1,3 +1,12 @@
+//
+//  Image.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//
+//
+
 #include "Miro.h"
 #include "Image.h"
 #include <stdio.h>
@@ -91,8 +100,9 @@ void Image::writePPM(char* pcFile)
 void Image::writePPM(char *pcFile, unsigned char *data, int width, int height)
 {
     FILE *fp = fopen(pcFile, "wb");
-    if (!fp)
+    if (!fp){
         fprintf(stderr, "Couldn't open PPM file %s for writing\n", pcFile);
+    }
     else
     {
         fprintf(fp, "P6\n");
@@ -105,4 +115,57 @@ void Image::writePPM(char *pcFile, unsigned char *data, int width, int height)
             fwrite(&data[stride*i], stride, 1, fp);
         fclose(fp);
     }
+}
+
+// @author Karen Wolfe
+/* Helper method to read in ppm files for different textures */
+unsigned char * Image::readPPM(const char* pcFile){
+    const int BUFSIZE = 128;
+    FILE *fp = fopen(pcFile, "rb");
+    size_t read;
+    char buf[3][BUFSIZE];
+    char* retval_fgets;
+    size_t retval_sscanf;
+    if(!fp){
+        fprintf(stderr, "Couldn't open PPM file %s for reading\n", pcFile);
+        m_width = 0;
+        m_height = 0;
+        return NULL;
+
+    }
+    else{
+        retval_fgets = fgets(buf[0], BUFSIZE, fp);
+
+        // Read width and height:
+        do
+        {
+            retval_fgets=fgets(buf[0], BUFSIZE, fp);
+        } while (buf[0][0] == '#');
+
+        retval_sscanf=sscanf(buf[0], "%s %s", buf[1], buf[2]);
+        m_width  = atoi(buf[1]);
+        m_height = atoi(buf[2]);
+
+        // Read maxval:
+        do
+        {
+            retval_fgets=fgets(buf[0], BUFSIZE, fp);
+        } while (buf[0][0] == '#');
+
+        // Read image data:
+        m_rawData = new unsigned char[m_width * m_height * 3];
+        read = fread(m_rawData, m_width * m_height * 3, 1, fp);
+        fclose(fp);
+        if (read != 1)
+        {
+            std::cerr << "error parsing ppm file, incomplete data" << std::endl;
+            m_width = 0;
+            m_height = 0;
+            return NULL;
+        }
+
+        return m_rawData;
+
+    }
+
 }

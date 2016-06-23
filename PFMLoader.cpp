@@ -1,3 +1,10 @@
+//
+//  PFMLoader.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #include "PFMLoader.h"
 #include <stdexcept>
 

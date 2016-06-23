@@ -1,3 +1,11 @@
+//
+//  Scene.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//
+//
 #ifndef CSE168_SCENE_H_INCLUDED
 #define CSE168_SCENE_H_INCLUDED
 
@@ -27,6 +35,7 @@ public:
 
     void raytraceImage(Camera *cam, Image *img);
     void pathtraceImage(Camera *cam, Image *img);
+    void photonMapImage(Camera *cam, Image *img);
     bool trace(HitInfo& minHit, const Ray& ray,
                float tMin = 0.0f, float tMax = MIRO_TMAX) const;
     Vector3 traceRecurse(const Ray& ray,

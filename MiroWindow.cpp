@@ -1,3 +1,10 @@
+//
+//  MiroWindow.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #include "MiroWindow.h"
 #include "OpenGL.h"
 #include "Miro.h"

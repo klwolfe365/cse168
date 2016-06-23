@@ -1,3 +1,10 @@
+//
+//  TriangleMesh.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #ifndef CSE168_TRIANGLE_MESH_H_INCLUDED
 #define CSE168_TRIANGLE_MESH_H_INCLUDED
 
@@ -36,6 +43,8 @@ public:
     TupleI3* vIndices()     {return m_vertexIndices;}
     TupleI3* nIndices()     {return m_normalIndices;}
     int numTris()           {return m_numTris;}
+
+    int objId;
 
 protected:
     void loadObj(FILE* fp, const Matrix4x4& ctm);

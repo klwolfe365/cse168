@@ -1,3 +1,11 @@
+//
+//  BVH.cpp
+//  cse168
+//
+//  Created by Karen Wolfe.
+//
+//
+
 #include "BVH.h"
 #include "Ray.h"
 #include "Console.h"
@@ -32,10 +40,8 @@ float getSplitPlaneCost(bin *b, int numPartitions, int split){
     float rCost = getSurfaceArea(b[split+1].binMin, b[numPartitions - 1].binMax) * rNum;
     return lCost + rCost;
 }
-////////////////////////////////////////////////////////////////////////////////
-void
-BVH::build(Objects * objs)
-{
+
+void BVH::build(Objects * objs){
     // construct the bounding volume hierarchy
     m_objects = objs;
     isLeaf = false;
@@ -95,6 +101,7 @@ BVH::build(Objects * objs)
     bin binsX[numPartitions];
     bin binsY[numPartitions];
     bin binsZ[numPartitions];
+
     //Set up bins using partition segment widths in x/y/z planes
     for(int i = 0; i < numPartitions; i++){
         binsX[i].numObjects = 0;
@@ -222,16 +229,9 @@ BVH::build(Objects * objs)
 }
 
 
-bool
-BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
-{
-    // Here you would need to traverse the BVH to perform ray-intersection
-    // acceleration. For now we just intersect every object.
-    // printf("bvh intersect\n");
-    // return oldIntersect(minHit, ray, tMin, tMax);
+bool BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const {
     bool hit = false;
     if(isLeaf){
-        // printf("Intersect leaf\n");
         HitInfo tempMinHit;
         tempMinHit.triHit = minHit.triHit;
         tempMinHit.boxHit = minHit.boxHit;
@@ -244,14 +244,12 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
                 hit = true;
                 hitCount++;
                 if (tempMinHit.t < minHit.t){
-                    // tempMinHit.hitNum = minHit.hitNum;
                     minHit = tempMinHit;
                     minHit.material = tempMinHit.material;
 
                 }
             }
         }
-        // printf("Triangle hit %d vs %d\n", minHit.triHit, hitCount);
         minHit.triHit = hitCount;
     } else {
         HitInfo lMinHit;
@@ -263,7 +261,6 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
         if(lHit && rHit){
             left_child->getBoundingBox().incHitNum();
             right_child->getBoundingBox().incHitNum();
-            // printf("Left and right child bbox hit...\n");
             lHit = left_child->intersect(lMinHit, ray, tMin, tMax);
             rHit = right_child->intersect(rMinHit, ray, tMin, tMax);
             if(lHit){
@@ -287,13 +284,11 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
                     minHit = rMinHit;
                     minHit.material = rMinHit.material;
                 }
-                // hit = true;
             }
             minHit.boxHit = lMinHit.boxHit + rMinHit.boxHit + 1;
         }
         else if (lHit){
-            left_child->getBoundingBox().incHitNum();//.hitNum++;
-            // printf("Hit left bbox child only\n");
+            left_child->getBoundingBox().incHitNum();
             if(left_child->intersect(lMinHit, ray, tMin, tMax)){
                 hit = true;
                 minHit = lMinHit;
@@ -302,8 +297,7 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
             minHit.boxHit = lMinHit.boxHit + 1;
         }
         else if(rHit){
-            right_child->getBoundingBox().incHitNum();//.hitNum++;
-            // printf("Hit right bbox child only\n");
+            right_child->getBoundingBox().incHitNum();
             if(right_child->intersect(rMinHit, ray, tMin, tMax)){
                 hit = true;
                 minHit = rMinHit;
@@ -314,7 +308,6 @@ BVH::intersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const
             hit = false;
         }
     }
-    // printf("Returning\n");
     return hit;
 }
 
@@ -342,6 +335,7 @@ int BVH::getTriangleHits(){
     return left_child->getTriangleHits() + right_child->getTriangleHits();
 }
 
+// Following intersection method provided in cse168 starter code
 bool BVH::oldIntersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) const {
     bool hit = false;
     HitInfo tempMinHit;
@@ -363,7 +357,6 @@ bool BVH::oldIntersect(HitInfo& minHit, const Ray& ray, float tMin, float tMax) 
             }
         }
     }
-    // printf("Triangle hit %d vs %d\n", minHit.triHit, hitCount);
     minHit.triHit = hitCount;
     return hit;
 }

@@ -1,3 +1,11 @@
+//
+//  Ray.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//
+//
 #ifndef CSE168_RAY_H_INCLUDED
 #define CSE168_RAY_H_INCLUDED
 
@@ -33,9 +41,17 @@ public:
     Vector3 P;                          //!< The hit point
     Vector3 N;                          //!< Shading normal vector
     const Material* material;           //!< Material of the intersected object
+    int objId;
     int hitNum;
     int boxHit;
     int triHit;
+    int depth;
+    int BRDFindex;
+    float r;                            // photon radius
+    int photonCount;                    // accumulated photon count
+    Vector3 color;
+    float u;                            // Pixel coordinates
+    float v;
     //! Default constructor.
     explicit HitInfo(float t = 0.0f,
                      const Vector3& P = Vector3(),

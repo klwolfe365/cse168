@@ -1,3 +1,10 @@
+//
+//  Perlin.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #include "Perlin.h"
 
 const unsigned char PerlinNoise::p[512] =

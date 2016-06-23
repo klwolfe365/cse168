@@ -9,6 +9,7 @@
 #include "TriangleMesh.h"
 #include "Triangle.h"
 #include "Lambert.h"
+#include "CoolWarmShader.h"
 
 // local helper function declarations
 namespace
@@ -38,31 +39,31 @@ makeTeapotScene()
 
     // create and place a point light source
     PointLight * light = new PointLight;
-    light->setPosition(Vector3(10, 10, 10));
+    light->setPosition(Vector3(25, 10, 10));
     light->setColor(Vector3(1, 1, 1));
     light->setWattage(700);
     g_scene->addLight(light);
 
-    Material* material = new Lambert(Vector3(1.0f));
+    Material* material = new CoolWarmShader(Vector3(0.4, 0.4, 0.7), Vector3(0.8, 0.6, 0.6), true);//new Lambert(Vector3(1.0f));
     TriangleMesh * teapot = new TriangleMesh;
     teapot->load("objs/teapot.obj");
     addMeshTrianglesToScene(teapot, material);
 
     // create the floor triangle
-    TriangleMesh * floor = new TriangleMesh;
-    floor->createSingleTriangle();
-    floor->setV1(Vector3(-10, 0, -10));
-    floor->setV2(Vector3(  0, 0,  10));
-    floor->setV3(Vector3( 10, 0, -10));
-    floor->setN1(Vector3(0, 1, 0));
-    floor->setN2(Vector3(0, 1, 0));
-    floor->setN3(Vector3(0, 1, 0));
-
-    Triangle* t = new Triangle;
-    t->setIndex(0);
-    t->setMesh(floor);
-    t->setMaterial(material);
-    g_scene->addObject(t);
+    // TriangleMesh * floor = new TriangleMesh;
+    // floor->createSingleTriangle();
+    // floor->setV1(Vector3(-10, 0, -10));
+    // floor->setV2(Vector3(  0, 0,  10));
+    // floor->setV3(Vector3( 10, 0, -10));
+    // floor->setN1(Vector3(0, 1, 0));
+    // floor->setN2(Vector3(0, 1, 0));
+    // floor->setN3(Vector3(0, 1, 0));
+    //
+    // Triangle* t = new Triangle;
+    // t->setIndex(0);
+    // t->setMesh(floor);
+    // t->setMaterial(material);
+    // g_scene->addObject(t);
 
     // let objects do pre-calculations if needed
     g_scene->preCalc();
@@ -150,7 +151,7 @@ makeBunny20Scene()
     xform2 *= scale(.6, 1, 1.1);
 
 
-    // bunny 1
+    bunny 1
     xform.setIdentity();
     xform *= scale(0.3, 2.0, 0.7);
     xform *= translate(-1, .4, .3);
@@ -312,7 +313,7 @@ makeBunny20Scene()
     xform *= scale(1.5, 1.5, 1.5);
     mesh = new TriangleMesh;
     mesh->load("bunny.obj", xform);
-    addMeshTrianglesToScene(mesh, material);
+    addMeshTrianglesToScene(mesh, material);?
 
 
     // create the floor triangle
@@ -397,7 +398,7 @@ makeCornellBoxScene()
 	light1->setColor(Vector3(1, 1, 1));
 	light1->setWattage(10);
 	// g_scene->addLight(light1);
-    
+
     Material* material = new Lambert(Vector3(1.0f));
     TriangleMesh * mesh = new TriangleMesh;
     mesh->load("cornell_box.obj");

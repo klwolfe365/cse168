@@ -1,3 +1,10 @@
+//
+//  Specular.h
+//  cse168
+//
+//  Written by Karen Wolfe
+//
+//
 #ifndef CSE168_SPECULAR_H_INCLUDED
 #define CSE168_SPECULAR_H_INCLUDED
 

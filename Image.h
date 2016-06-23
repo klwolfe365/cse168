@@ -1,3 +1,11 @@
+//
+//  Image.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe to read in ppm files for textures
+//
+//
 #ifndef CSE168_IMAGE_H_INCLUDED
 #define CSE168_IMAGE_H_INCLUDED
 
@@ -26,10 +34,14 @@ public:
     void clear(const Vector3& c);
     void writePPM(char* pcFile); // write data to a ppm image file
     void writePPM(char *pcName, unsigned char *data, int width, int height);
+    unsigned char* readPPM(const char* pcFile);
 
     unsigned char* getCharPixels()  {return (unsigned char*)m_pixels;}
     int width() const               {return m_width;}
     int height() const              {return m_height;}
+
+
+    unsigned char * m_rawData;
 
 private:
     Pixel* m_pixels;

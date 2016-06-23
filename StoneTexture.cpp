@@ -1,3 +1,10 @@
+//
+//  StoneTexture.cpp
+//  cse168
+//
+//  Written by Karen Wolfe
+//
+//
 #include "StoneTexture.h"
 #include "Worley.h"
 #include "Perlin.h"
@@ -36,7 +43,6 @@ Vector3 StoneTexture::getColor(Vector3& v) const {
 		// add Perlin noise
 		float noise = PerlinNoise::noise(x, y, z);
 		color += fabs(noise);
-        // r = g = b = color;
 		r += color + (float)(id[0] % 10) / 10.0f;
 		g += color + (float)(id[0] % 10) / 25.0f;
 		b += color + (float)(id[0] % 10) / 25.0f;

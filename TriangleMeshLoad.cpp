@@ -1,3 +1,10 @@
+//
+//  TriangleMeshLoad.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #include "TriangleMesh.h"
 #include "Console.h"
 #include <algorithm>
@@ -215,4 +222,3 @@ TriangleMesh::loadObj(FILE* fp, const Matrix4x4& ctm)
         } //  else ignore line
     }
 }
-

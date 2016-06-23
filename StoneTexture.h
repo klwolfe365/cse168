@@ -1,3 +1,10 @@
+//
+//  StoneTexture.h
+//  cse168
+//
+//  Written by Karen Wolfe
+//
+//
 #ifndef CSE168_STONETEXTURE_H_INCLUDED
 #define CSE168_STONETEXTURE_H_INCLUDED
 

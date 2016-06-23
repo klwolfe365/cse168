@@ -1,3 +1,11 @@
+//
+//  BoundingBox.cpp
+//  cse168
+//
+//  Created by Karen Wolfe.
+//
+//
+
 #include "BoundingBox.h"
 
 BoundingBox::BoundingBox(){}
@@ -45,9 +53,8 @@ bool BoundingBox::intersect(HitInfo& minHit, const Ray& ray,
 
     minVal = fmax(minX, fmax(minY, minZ));
     maxVal = fmin(maxX, fmin(maxY, maxZ));
-    // minHit.t = minVal;
 
-    return maxVal >= minVal;//fmax(minVal, 0); //for rays that begin in the box
+    return fmax(minVal, 0); //for rays that begin in the box
 }
 
 void BoundingBox::print() {

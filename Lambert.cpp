@@ -1,3 +1,12 @@
+//
+//  Lambert.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//  Added BRDF, getEmittance, reflect, refract, and randomReflect methods
+//
+//
 #include "Lambert.h"
 #include "Ray.h"
 #include "Scene.h"
@@ -41,10 +50,7 @@ float Lambert::getEmittance(const Ray& ray, const HitInfo& hit,
 
         // get the diffuse component
         float nDotL = dot(hit.N, l);
-        // Vector3 result = pLight->color();
-        // result *= color;
         em += std::max(0.0f, nDotL/falloff * pLight->wattage() * weight / PI);
-        // L += std::max(0.0f, nDotL/falloff * pLight->wattage() * weight / PI) * result;
     }
     return em;
 }
@@ -52,7 +58,6 @@ float Lambert::getEmittance(const Ray& ray, const HitInfo& hit,
 Vector3
 Lambert::shade(const Ray& ray, const HitInfo& hit, const Scene& scene) const
 {
-    // printf("Shading...\n");
     Vector3 L = Vector3(0.0f, 0.0f, 0.0f);
 
     const Vector3 viewDir = -ray.d; // d is a unit vector

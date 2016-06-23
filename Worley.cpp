@@ -1,4 +1,11 @@
- #include "Worley.h"
+//
+//  Worley.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
+#include "Worley.h"
 #include <math.h>
 
 

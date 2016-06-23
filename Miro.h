@@ -1,3 +1,10 @@
+//
+//  Miro.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #ifndef __MIRO_H__
 #define __MIRO_H__
 
@@ -6,10 +13,10 @@
 // #endif
 
 const float MIRO_TMAX = 1e12f;
-const float epsilon   = 0.001f; 
+const float epsilon   = 0.001f;
 const float PI = 3.1415926535897932384626433832795028841972f;
 const float DegToRad = PI/180.0f;
-const float RadToDeg = 180.0f/PI; 
+const float RadToDeg = 180.0f/PI;
 
 #include <stdlib.h>
 #include "OpenGL.h"

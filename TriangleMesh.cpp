@@ -1,3 +1,10 @@
+//
+//  TriangleMesh.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//
+//
 #include "TriangleMesh.h"
 #include "Triangle.h"
 #include "Scene.h"

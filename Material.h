@@ -1,3 +1,11 @@
+//
+//  Material.h
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe
+//
+//
 #ifndef CSE168_MATERIAL_H_INCLUDED
 #define CSE168_MATERIAL_H_INCLUDED
 

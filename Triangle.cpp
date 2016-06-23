@@ -1,3 +1,12 @@
+//
+//  Triangle.cpp
+//  cse168
+//
+//  Provided in CSE168 starter code
+//  Modified by Karen Wolfe to add Barycentric Interpolation and bvh intersect
+// algorithms
+//
+//
 #include "Triangle.h"
 #include "TriangleMesh.h"
 #include "Ray.h"
@@ -96,6 +105,9 @@ Triangle::intersect(HitInfo& result, const Ray& r,float tMin, float tMax)
 
 
     result.material = this->m_material;
+    result.objId = m_mesh->objId;
+    result.u = beta;
+    result.v = gamma;
     return true;
 }
 
