@@ -1,0 +1,86 @@
+
+ <head>
+<link rel="stylesheet" type="text/css" href="Wolfe_Karen_final.css">
+</head>
+
+ 
+<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+			
+<article id="post-18" class="post-18 post type-post status-publish format-standard hentry category-uncategorized">
+	
+	<header class="entry-header">
+		<h1 class="entry-title">CSE 168 Final Project</h1>	</header><!-- .entry-header -->
+		<h4 class="entry-content">by Karen Wolfe </h4>
+
+	<div class="entry-content">
+		<h3>Proposal</h3>
+		<p>For this project I wanted to implement the following non-photorealistic rendering 
+		algorithms: Cel Shading with feature edges, pencil shading, and cool-to-warm shading. 
+		All of these algorithms were integrated into the miro base code and are implemented 
+		using ray tracing over GLSL shaders, and to do so I followed the techniques laid out 
+		in the following paper, <a href="http://www.markmark.net/npar/npar2000_lake_et_al.pdf">
+		Stylized Rendering Techniques For Scalable Real-Time 3D Animation </a>. 
+		For my final image, I combined Cel Shading with pencil shading to produce an image 
+		that appeared to be&nbsp; a "work in progress." 
+		The background of the image was intended to look like it was still being drawn out 
+		where as objects in the foreground were already colored in.</p>
+		<p><img scale="2" originalw="1108" class="alignnone size-full wp-image-26" 
+		src="https://cse168.files.wordpress.com/2016/06/buuny_final.png?w=1108" alt="buuny_final" height="700" width="700"></p>
+
+		<h3>Cel Shading</h3>
+		<p>The goal of the cel shader is to mimic cartoon images where there is no smoothly 
+		shaded lighting. Rather lighting is split into distinct bands of the color intensity. 
+		The shader allows the user to pass in a base color along with color ranges (0-1) for 
+		the 1D texture mapping of color, with the dark banding being on the low end of the 
+		range and the light banding being near the top of the range. Based off the surface 
+		normal dotted with the direction to the light, surfaces that face more away from the 
+		light are thus colored in the darker intensity of the base color and surfaces that 
+		are more directly illuminated use the lighter intensities.</p>
+
+		<h3>Feature Edges</h3>
+		<p>To implement feature edges, I followed the following paper, 
+		<a href="http://www.sci.utah.edu/~roni/research/projects/NPR-lines/NPR-lines.NPAR09.pdf">
+		Ray Tracing NPR-Style Feature Lines</a>. Knowing whether or not a ray strikes the 
+		scene near a feature line requires knowing what happens with the rays that strike 
+		around the ray of interest. I followed the section about tracing ray stencils to 
+		find these surrounding hit points to draw feature lines. If this ray stencil hits 
+		different objects, then the current ray is near an edge or an intersection, so an 
+		edge is drawn. If the ray stencil is contained within the same object, then it's a 
+		crease edge or self-occluding silhouette. A crease is determined by looking at the 
+		surrounding normals of the hit location, and if the dot product is within some 
+		threshold, we draw the crease. A silhouette is determined if the distance of the 
+		other hits in the scene is above some threshold.</p>
+		<p>Line weights are determined using the edge-weight metric given in the paper, 
+		where the thickness of the edge is used a weight against the sample color.</p>
+
+		<h3>Pencil Shading</h3>
+		<p>Different pencil stroke textures and a single paper texture are loaded into the 
+		shader. To do so, I had to write a method to read in .ppm files and that data is 
+		stored into an unsigned char array. With the current setup of the shader, textures 
+		should be read in order from lightest (aka the paper texture) to darkest (near 
+		solid black hatching). Now that textures are ordered in density of pencil strokes, 
+		this can be used when shading the image. We take the normal of the hit location and 
+		dot that with the direction to the light and index into the texture array to find 
+		the darkest texture to use. All textures from the base paper texture to the indexed 
+		texture are then layered to shade the given point. As for indexing into the texture, 
+		UV coordinates are fixed to the pixel coordinates for that given hit location, giving 
+		the image a flat appearance. Future improvements for the pencil shader could be to 
+		associate UV coordinates with the actual triangle mesh to have the pencil strokes 
+		follow curvatures in the object.</p>
+
+		<h3>Cool-to-Warm Shading</h3>
+		<p>Although this was not used in the final rendering of the image, this type of 
+		shading is often low intensity and is used to given impressions of an object's 
+		curvature through color. Surfaces facing in one direction are shaded with one 
+		color and those facing the light are given a warm color. The final color is just a 
+		linear blend of cool and warm colors modulated by a&nbsp; warmth constant. Although 
+		not pictured here, this can be combined with feature edges to further accentuate 
+		the shape of the model.</p>
+		<p><img scale="2" originalh="543" originalw="539" class="alignnone  wp-image-72" 
+		src="https://cse168.files.wordpress.com/2016/06/teapot.png?w=539&amp;h=543" 
+		alt="teapot" height="543" width="539"></p>
+	
+		<p>&nbsp;</p>
